@@ -80,14 +80,14 @@ export default buildConfig({
           },
         },
       },
-      bucket: process.env.S3_BUCKET,
+      bucket: process.env.S3_BUCKET || '',
       config: {
         endpoint: process.env.S3_ENDPOINT, // Cloudflare R2 endpoint
         region: process.env.S3_REGION, // “auto”
         forcePathStyle: true, // REQUIRED for R2
         credentials: {
-          accessKeyId: process.env.S3_ACCESS_KEY_ID,
-          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+          accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
         },
       },
     }),
