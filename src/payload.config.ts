@@ -17,6 +17,8 @@ import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 
+import { s3Storage } from '@payloadcms/storage-s3'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -68,6 +70,27 @@ export default buildConfig({
   plugins: [
     ...plugins,
     // storage-adapter-placeholder
+    s3Storage({
+      collections: {
+        media: {
+          // Optionally add prefix or signed URL logic
+          prefix: 'uploads/',
+          signedDownloads: {
+            shouldUseSignedURL: ({ filename }) => filename.endsWith('.mp4'),
+          },
+        },
+      },
+      bucket: process.env.S3_BUCKET,
+      config: {
+        endpoint: process.env.S3_ENDPOINT, // Cloudflare R2 endpoint
+        region: process.env.S3_REGION, // “auto”
+        forcePathStyle: true, // REQUIRED for R2
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID,
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+        },
+      },
+    }),
   ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
